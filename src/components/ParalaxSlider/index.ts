@@ -1,2 +1,2 @@
-export * from "./ParalaxSlider";
-export { default } from "./ParalaxSlider";
+export * from './ParalaxSlider';
+export { default } from './ParalaxSlider';

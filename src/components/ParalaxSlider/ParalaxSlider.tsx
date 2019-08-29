@@ -1,7 +1,7 @@
-import React from "react";
-import cx from "classnames";
+import React from 'react';
+import cx from 'classnames';
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
 interface Position {
   x: number;
@@ -17,81 +17,81 @@ interface StyleProps {
 const useStyles = makeStyles<Theme, StyleProps>((theme: Theme) => {
   return {
     root: {
-      height: "100%",
-      width: "100%",
-      "& *": {
-        cursor: ""
+      height: '100%',
+      width: '100%',
+      '& *': {
+        cursor: '',
       },
-      backgroundColor: "rgba(0,0,0,0.7)"
+      backgroundColor: 'rgba(0,0,0,0.7)',
     },
     dragging: props => ({
-      transform: `translateX(${props.position.x}px)`
+      transform: `translateX(${props.position.x}px)`,
     }),
     notDragging: {
-      transition: "all 500ms ease-in-out"
+      transition: 'all 500ms ease-in-out',
     },
     slider: props => ({
-      position: "relative",
+      position: 'relative',
       left: `-${props.index * 100}%`,
-      height: "100%",
-      width: `${props.count * 100}%`
+      height: '100%',
+      width: `${props.count * 100}%`,
     }),
     slide: props => {
       return {
-        display: "inline-block",
-        position: "relative",
+        display: 'inline-block',
+        position: 'relative',
         width: `${100 / props.count}%`,
-        height: "100%"
+        height: '100%',
       };
     },
     wrap: {
-      position: "relative",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%,-50%)",
-      maxWidth: "500px",
-      maxHeight: "300px",
-      overflowY: "auto",
-      backgroundColor: "rgba(0,0,0,0.7)",
+      position: 'relative',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%,-50%)',
+      maxWidth: '500px',
+      maxHeight: '300px',
+      overflowY: 'auto',
+      backgroundColor: 'rgba(0,0,0,0.7)',
       [theme.breakpoints.down(600)]: {
-        maxWidth: "83.333333333333333%"
-      }
+        maxWidth: '83.333333333333333%',
+      },
     },
     next: {
-      position: "absolute",
-      top: "0px",
-      right: "0px",
-      height: "100%",
-      width: "50px",
-      maxWidth: "10%",
+      position: 'absolute',
+      top: '0px',
+      right: '0px',
+      height: '100%',
+      width: '50px',
+      maxWidth: '10%',
       transition: `all ${200}ms ease-in-out`,
-      "&:hover": {
-        boxShadow: "inset -20px 0px 10px -10px rgba(255,255,255,0.7)"
+      '&:hover': {
+        boxShadow: 'inset -20px 0px 10px -10px rgba(255,255,255,0.7)',
       },
       [theme.breakpoints.down(600)]: {
-        maxWidth: "16.66666666666666%"
-      }
+        maxWidth: '16.66666666666666%',
+      },
     },
     nextByDrag: {
-      boxShadow: "inset -20px 0px 10px -10px rgba(255,255,255,0.7)"
+      boxShadow: 'inset -20px 0px 10px -10px rgba(255,255,255,0.7)',
     },
     prev: {
-      position: "absolute",
-      top: "0px",
-      height: "100%",
-      width: "50px",
-      maxWidth: "10%",
+      position: 'absolute',
+      top: '0px',
+      height: '100%',
+      width: '50px',
+      maxWidth: '10%',
       transition: `all ${200}ms ease-in-out`,
-      "&:hover": {
-        boxShadow: "inset 20px 0px 10px -10px rgba(255,255,255,0.7)"
+      '&:hover': {
+        boxShadow: 'inset 20px 0px 10px -10px rgba(255,255,255,0.7)',
       },
       [theme.breakpoints.down(600)]: {
-        maxWidth: "16.66666666666666%"
-      }
+        maxWidth: '16.66666666666666%',
+      },
     },
     prevByDrag: {
-      boxShadow: "inset 20px 0px 10px -10px rgba(255,255,255,0.7)"
-    }
+      boxShadow: 'inset 20px 0px 10px -10px rgba(255,255,255,0.7)',
+    },
   };
 });
 
@@ -122,7 +122,7 @@ export const ParalaxSlider: React.FC = props => {
     dragging && startPosition && actualPosition
       ? {
           x: actualPosition.x - startPosition.x,
-          y: 0
+          y: 0,
         }
       : { x: 0, y: 0 };
 
@@ -145,7 +145,7 @@ export const ParalaxSlider: React.FC = props => {
       <div
         className={cx(classes.slider, {
           [classes.dragging]: dragging,
-          [classes.notDragging]: !dragging
+          [classes.notDragging]: !dragging,
         })}
       >
         {React.Children.map(props.children, (child, i) => (
@@ -159,7 +159,7 @@ export const ParalaxSlider: React.FC = props => {
                   setDragging(true);
                   setStartPosition({ x: e.clientX, y: e.clientY });
                   setActualPosition({ x: e.clientX, y: e.clientY });
-                }, CLICK_TIMEOUT_MS)
+                }, CLICK_TIMEOUT_MS),
               );
               return false;
             }}
@@ -181,13 +181,13 @@ export const ParalaxSlider: React.FC = props => {
       </div>
       <div
         className={cx(classes.prev, {
-          [classes.prevByDrag]: selectPrevByDrag
+          [classes.prevByDrag]: selectPrevByDrag,
         })}
         onClick={goToPrev}
       />
       <div
         className={cx(classes.next, {
-          [classes.nextByDrag]: selectNextByDrag
+          [classes.nextByDrag]: selectNextByDrag,
         })}
         onClick={goToNext}
       />
