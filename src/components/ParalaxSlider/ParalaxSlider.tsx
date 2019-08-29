@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import React from "react";
 import cx from "classnames";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -15,14 +15,14 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme: Theme) => {
-  const slideAnimationTimeMs = 500;
   return {
     root: {
       height: "100%",
       width: "100%",
       "& *": {
         cursor: ""
-      }
+      },
+      backgroundColor: "rgba(0,0,0,0.7)"
     },
     dragging: props => ({
       transform: `translateX(${props.position.x}px)`
@@ -34,16 +34,14 @@ const useStyles = makeStyles<Theme, StyleProps>((theme: Theme) => {
       position: "relative",
       left: `-${props.index * 100}%`,
       height: "100%",
-      width: `${props.count * 100}%`,
-      backgroundColor: "#fefefe"
+      width: `${props.count * 100}%`
     }),
     slide: props => {
       return {
         display: "inline-block",
         position: "relative",
         width: `${100 / props.count}%`,
-        height: "100%",
-        backgroundColor: "rgba(0,0,0,0.7)"
+        height: "100%"
       };
     },
     wrap: {
@@ -66,7 +64,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme: Theme) => {
       height: "100%",
       width: "50px",
       maxWidth: "10%",
-      transition: `all ${slideAnimationTimeMs}ms ease-in-out`,
+      transition: `all ${200}ms ease-in-out`,
       "&:hover": {
         boxShadow: "inset -20px 0px 10px -10px rgba(255,255,255,0.7)"
       },
@@ -74,35 +72,30 @@ const useStyles = makeStyles<Theme, StyleProps>((theme: Theme) => {
         maxWidth: "16.66666666666666%"
       }
     },
+    nextByDrag: {
+      boxShadow: "inset -20px 0px 10px -10px rgba(255,255,255,0.7)"
+    },
     prev: {
       position: "absolute",
       top: "0px",
       height: "100%",
       width: "50px",
       maxWidth: "10%",
-      transition: `all ${slideAnimationTimeMs}ms ease-in-out`,
+      transition: `all ${200}ms ease-in-out`,
       "&:hover": {
         boxShadow: "inset 20px 0px 10px -10px rgba(255,255,255,0.7)"
       },
       [theme.breakpoints.down(600)]: {
         maxWidth: "16.66666666666666%"
       }
+    },
+    prevByDrag: {
+      boxShadow: "inset 20px 0px 10px -10px rgba(255,255,255,0.7)"
     }
   };
 });
 
 const CLICK_TIMEOUT_MS = 200;
-
-function isDescendant(parent: HTMLElement, child: HTMLElement) {
-  var node = child.parentNode;
-  while (node != null) {
-    if (node == parent) {
-      return true;
-    }
-    node = node.parentNode;
-  }
-  return false;
-}
 
 export const ParalaxSlider: React.FC = props => {
   const count = React.Children.count(props.children);
@@ -114,7 +107,6 @@ export const ParalaxSlider: React.FC = props => {
   const [startPosition, setStartPosition] = React.useState<Position>();
   const [actualPosition, setActualPosition] = React.useState<Position>();
   const [lastPosition, setLastPostion] = React.useState<Position>();
-  const [ref, setRef] = React.useState<HTMLDivElement>();
 
   const goToPrev = () => {
     let prevIndex = index - 1;
@@ -144,13 +136,12 @@ export const ParalaxSlider: React.FC = props => {
     }
   }
 
+  const selectPrevByDrag = offset.x > 0 && offset.x > 100;
+  const selectNextByDrag = offset.x < 0 && offset.x < -100;
+
   const classes = useStyles({ count, index, position: offset });
   return (
-    <div
-      className={classes.root}
-      ref={ref => ref && setRef(ref)}
-      onMouseOut={e => {}}
-    >
+    <div className={classes.root}>
       <div
         className={cx(classes.slider, {
           [classes.dragging]: dragging,
@@ -167,6 +158,7 @@ export const ParalaxSlider: React.FC = props => {
                 setTimeout(() => {
                   setDragging(true);
                   setStartPosition({ x: e.clientX, y: e.clientY });
+                  setActualPosition({ x: e.clientX, y: e.clientY });
                 }, CLICK_TIMEOUT_MS)
               );
               return false;
@@ -187,8 +179,18 @@ export const ParalaxSlider: React.FC = props => {
           </div>
         ))}
       </div>
-      <div className={classes.prev} onClick={goToPrev} />
-      <div className={classes.next} onClick={goToNext} />
+      <div
+        className={cx(classes.prev, {
+          [classes.prevByDrag]: selectPrevByDrag
+        })}
+        onClick={goToPrev}
+      />
+      <div
+        className={cx(classes.next, {
+          [classes.nextByDrag]: selectNextByDrag
+        })}
+        onClick={goToNext}
+      />
     </div>
   );
 };
